@@ -2,6 +2,8 @@
 
 namespace App\Service\HeroSection;
 
+use App\Base\Response\DataStatus;
+use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
 use App\Http\Resources\HeroSection\HeroSectionResource;
 use App\Models\HeroSection\HeroSection;
@@ -13,7 +15,7 @@ class HeroSectionService
     {
     }
 
-        public function createHeroSection( $data)
+        public function createHeroSection( $data):DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -27,12 +29,10 @@ class HeroSectionService
         $heroSection = HeroSection::create($create_data + [
             'image' => $image
         ]);
-        return ApiResponseHelper::response(true, 'Hero section created successfully', [
-            new HeroSectionResource($heroSection)
-        ]);
+        return DataSuccess::make(resourceData:new HeroSectionResource($heroSection), message:'Hero section created successfully');
     }
 
-    public function updataHeroSection($data)
+    public function updataHeroSection($data):DataStatus
     {
         $updata_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -46,23 +46,20 @@ class HeroSectionService
         $heroSection->update($updata_data + [
             'image' => $image,
         ]);
-        return ApiResponseHelper::response(true, 'Hero section updated successfully', [
-            new HeroSectionResource($heroSection)
-        ]);
+            return DataSuccess::make(resourceData:new HeroSectionResource($heroSection), message:'Hero section updated successfully');
+
     }
 
-    public function fetchHeroSection($data)
+    public function fetchHeroSection($data):DataStatus
     {
         $heroSection = HeroSection::find($data['hero_section_id']);
-        return ApiResponseHelper::response(true, 'Hero section fetched successfully', [
-            new HeroSectionResource($heroSection)
-        ]);
+        return DataSuccess::make(resourceData:new HeroSectionResource($heroSection), message:'Hero section fetched successfully');
     }
 
-    public function deleteHeroSection($data)
+    public function deleteHeroSection($data):DataStatus
     {
         $heroSection = HeroSection::find($data['hero_section_id']);
         $heroSection->delete();
-        return ApiResponseHelper::response(true, 'Hero section deleted successfully');
+        return DataSuccess::make(message:'Hero section deleted successfully');
     }
 }

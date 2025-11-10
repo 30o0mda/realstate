@@ -2,16 +2,19 @@
 
 namespace App\Service\PropertyType;
 
+use App\Base\Response\DataStatus;
+use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
 use App\Http\Resources\PropertyType\PropertyTypeResource;
 use App\Models\PropertyType\PropertyType;
+use Dflydev\DotAccessData\Data;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class PropertyTypeService
 {
     public function __construct() {}
 
-    public function createPropertyType($data)
+    public function createPropertyType($data):DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -22,16 +25,14 @@ class PropertyTypeService
         $is_active = $data['is_active'] ?? false;
         // dd($create_data);
         $image = $data['image']->store('property_type', 'public');
-        $heroSection = PropertyType::create($create_data + [
+        $propertyType = PropertyType::create($create_data + [
             'image' => $image,
             'is_active' => $is_active
         ]);
-        return ApiResponseHelper::response(true, 'property type created successfully', [
-            new PropertyTypeResource($heroSection)
-        ]);
+        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type created successfully');
     }
 
-    public function updataPropertyType($data)
+    public function updataPropertyType($data):DataStatus
     {
         $updata_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -40,29 +41,25 @@ class PropertyTypeService
             ];
         }
         $is_active = $data['is_active'] ?? false;
-        $heroSection = PropertyType::find($data['property_type_id']);
-        $image = $data['image'] ? $data['image']->store('property_type', 'public') : $heroSection->image;
-        $heroSection->update($updata_data + [
+        $propertyType = PropertyType::find($data['property_type_id']);
+        $image = $data['image'] ? $data['image']->store('property_type', 'public') : $propertyType->image;
+        $propertyType->update($updata_data + [
             'image' => $image,
             'is_active' => $is_active
         ]);
-        return ApiResponseHelper::response(true, 'property type updated successfully', [
-            new PropertyTypeResource($heroSection)
-        ]);
+        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type updated successfully');
     }
 
-    public function fetchPropertyType($data)
+    public function fetchPropertyType($data):DataStatus
     {
-        $heroSection = PropertyType::find($data['property_type_id']);
-        return ApiResponseHelper::response(true, 'property type fetched successfully', [
-            new PropertyTypeResource($heroSection)
-        ]);
+        $propertyType = PropertyType::find($data['property_type_id']);
+        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type fetched successfully');
     }
 
-    public function deletePropertyType($data)
+    public function deletePropertyType($data):DataStatus
     {
-        $heroSection = PropertyType::find($data['property_type_id']);
-        $heroSection->delete();
-        return ApiResponseHelper::response(true, 'property type deleted successfully');
+        $propertyType = PropertyType::find($data['property_type_id']);
+        $propertyType->delete();
+        return DataSuccess::make(message:'property type deleted successfully');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models\PropertyType;
 
+use App\Models\CategorySection\CategorySection;
+use App\Models\SectionPropertyType\SectionPropertyType;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -18,5 +20,9 @@ class PropertyType extends Model implements TranslatableContract
         'is_active',
     ];
 
+    public function categorySections()
+    {
+        return $this->belongsToMany(CategorySection::class, 'category_section_property_types', 'property_type_id', 'category_section_id');
+    }
 
 }

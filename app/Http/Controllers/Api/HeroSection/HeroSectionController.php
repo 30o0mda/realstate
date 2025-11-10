@@ -22,25 +22,25 @@ class HeroSectionController extends Controller
     public function createHeroSection(CreateHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->createHeroSection($data)->getData();
+        return $this->HeroSectionService->createHeroSection($data)->response();
     }
 
     public function updataHeroSection(UpdataHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->updataHeroSection($data)->getData();
+        return $this->HeroSectionService->updataHeroSection($data)->response();
     }
 
     public function fetchHeroSection(FetchHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->fetchHeroSection($data)->getData();
+        return $this->HeroSectionService->fetchHeroSection($data)->response();
     }
 
     public function deleteHeroSection(DeleteHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->deleteHeroSection($data)->getData();
+        return $this->HeroSectionService->deleteHeroSection($data)->response();
     }
 
 }

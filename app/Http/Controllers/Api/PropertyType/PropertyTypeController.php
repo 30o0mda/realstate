@@ -22,25 +22,25 @@ class PropertyTypeController extends Controller
     public function createPropertyType(CreatePropertyTypeRequest $request)
     {
         $data = $request->validated();
-        return $this->PropertyTypeService->createPropertyType($data)->getData();
+        return $this->PropertyTypeService->createPropertyType($data)->response();
     }
 
     public function updataPropertyType(UpdataPropertyTypeRequest $request)
     {
         $data = $request->validated();
-        return $this->PropertyTypeService->updataPropertyType($data)->getData();
+        return $this->PropertyTypeService->updataPropertyType($data)->response();
     }
 
     public function fetchPropertyType(FetchPropertyTypeRequest $request)
     {
         $data = $request->validated();
-        return $this->PropertyTypeService->fetchPropertyType($data)->getData();
+        return $this->PropertyTypeService->fetchPropertyType($data)->response();
     }
 
     public function deletePropertyType(DeletePropertyTypeRequest $request)
     {
         $data = $request->validated();
-        return $this->PropertyTypeService->deletePropertyType($data)->getData();
+        return $this->PropertyTypeService->deletePropertyType($data)->response();
     }
 
 }
