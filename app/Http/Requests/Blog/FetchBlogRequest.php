@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Location;
+namespace App\Http\Requests\Blog;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FetchLocationRequest extends FormRequest
+class FetchBlogRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

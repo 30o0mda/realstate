@@ -6,6 +6,7 @@ use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PropertyType\CreatePropertyTypeRequest;
 use App\Http\Requests\PropertyType\DeletePropertyTypeRequest;
+use App\Http\Requests\PropertyType\FetchPropertyTypeDetailsRequest;
 use App\Http\Requests\PropertyType\FetchPropertyTypeRequest;
 use App\Http\Requests\PropertyType\UpdataPropertyTypeRequest;
 use App\Service\PropertyType\PropertyTypeService;
@@ -35,6 +36,12 @@ class PropertyTypeController extends Controller
     {
         $data = $request->validated();
         return $this->PropertyTypeService->fetchPropertyType($data)->response();
+    }
+
+    public function fetchPropertyTypeDetails(FetchPropertyTypeDetailsRequest $request)
+    {
+        $data = $request->validated();
+        return $this->PropertyTypeService->fetchPropertyTypeDetails($data)->response();
     }
 
     public function deletePropertyType(DeletePropertyTypeRequest $request)

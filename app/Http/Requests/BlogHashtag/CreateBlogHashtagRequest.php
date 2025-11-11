@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\CategorySection;
+namespace App\Http\Requests\BlogHashtag;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-class CreateOrUpdateCategorySectionRequest extends FormRequest
+class CreateBlogHashtagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -30,12 +30,13 @@ class CreateOrUpdateCategorySectionRequest extends FormRequest
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale),
+                Rule::unique('blog_hashtag_translations', 'title')->where('locale', $locale),
             ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
         }
-        $rules['property_type_ids'] = 'nullable|array';
-        $rules['property_type_ids.*'] = 'integer|exists:property_types,id';
+        $rules['image'] = 'nullable';
+        $rules['slug'] = 'required|unique:blog_hashtags,slug';
+        $rules['alt'] = 'nullable|string';
+
         return $rules;
     }
 }

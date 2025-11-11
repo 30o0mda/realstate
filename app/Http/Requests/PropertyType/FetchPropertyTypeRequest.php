@@ -20,8 +20,10 @@ class FetchPropertyTypeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'property_type_id' => 'required|exists:property_types,id',
+       return [
+            'word' => 'nullable|string',
+            'with_pagination' => 'nullable|boolean',
+            'per_page' => 'nullable|integer',
         ];
     }
 }

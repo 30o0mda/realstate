@@ -25,7 +25,7 @@ class HeroSectionService
             ];
         }
         // dd($create_data);
-        $image = $data['image']->store('hero_section', 'public');
+        $image = uploadImage($data['image'], 'hero_section', 'public');
         $heroSection = HeroSection::create($create_data + [
             'image' => $image
         ]);
@@ -42,7 +42,7 @@ class HeroSectionService
             ];
         }
         $heroSection = HeroSection::find($data['hero_section_id']);
-        $image = $data['image'] ? $data['image']->store('hero_section', 'public') : $heroSection->image;
+        $image = isset($data['image']) ? uploadImage($data['image'], 'hero_section', 'public') : $heroSection->image;
         $heroSection->update($updata_data + [
             'image' => $image,
         ]);
@@ -50,7 +50,25 @@ class HeroSectionService
 
     }
 
-    public function fetchHeroSection($data):DataStatus
+        public function fetchHeroSections($data): DataStatus
+    {
+        $query = HeroSection::query();
+        if (isset($data['word'])) {
+            $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
+        }
+        $query->latest();
+        if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
+            $per_page = $data['per_page'] ?? 10;
+            $all_hero_sections = $query->paginate($per_page);
+            $response = HeroSectionResource::collection($all_hero_sections)->response()->getData(true);
+        } else {
+            $all_hero_sections = $query->get();
+            $response = HeroSectionResource::collection($all_hero_sections)->response()->getData(true);
+        }
+        return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
+    }
+
+    public function fetchHeroSectionDetails($data):DataStatus
     {
         $heroSection = HeroSection::find($data['hero_section_id']);
         return DataSuccess::make(resourceData:new HeroSectionResource($heroSection), message:'Hero section fetched successfully');

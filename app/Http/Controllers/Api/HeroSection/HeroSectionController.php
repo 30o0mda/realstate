@@ -6,6 +6,7 @@ use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HeroSection\CreateHeroSectionRequest;
 use App\Http\Requests\HeroSection\DeleteHeroSectionRequest;
+use App\Http\Requests\HeroSection\FetchHeroSectionDetailsRequest;
 use App\Http\Requests\HeroSection\FetchHeroSectionRequest;
 use App\Http\Requests\HeroSection\UpdataHeroSectionRequest;
 use App\Service\HeroSection\HeroSectionService;
@@ -31,10 +32,16 @@ class HeroSectionController extends Controller
         return $this->HeroSectionService->updataHeroSection($data)->response();
     }
 
-    public function fetchHeroSection(FetchHeroSectionRequest $request)
+    public function fetchHeroSections(FetchHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->fetchHeroSection($data)->response();
+        return $this->HeroSectionService->fetchHeroSections($data)->response();
+    }
+
+    public function fetchHeroSectionDetails(FetchHeroSectionDetailsRequest $request)
+    {
+        $data = $request->validated();
+        return $this->HeroSectionService->fetchHeroSectionDetails($data)->response();
     }
 
     public function deleteHeroSection(DeleteHeroSectionRequest $request)

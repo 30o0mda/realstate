@@ -24,7 +24,7 @@ class PropertyTypeService
         }
         $is_active = $data['is_active'] ?? false;
         // dd($create_data);
-        $image = $data['image']->store('property_type', 'public');
+        $image = uploadImage($data['image'], 'property_type', 'public');
         $propertyType = PropertyType::create($create_data + [
             'image' => $image,
             'is_active' => $is_active
@@ -42,7 +42,7 @@ class PropertyTypeService
         }
         $is_active = $data['is_active'] ?? false;
         $propertyType = PropertyType::find($data['property_type_id']);
-        $image = $data['image'] ? $data['image']->store('property_type', 'public') : $propertyType->image;
+        $image = isset($data['image']) ? uploadImage($data['image'], 'property_type', 'public') : $propertyType->image;
         $propertyType->update($updata_data + [
             'image' => $image,
             'is_active' => $is_active
@@ -50,7 +50,26 @@ class PropertyTypeService
         return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type updated successfully');
     }
 
-    public function fetchPropertyType($data):DataStatus
+            public function fetchPropertyType($data): DataStatus
+    {
+        $query = PropertyType::query();
+        if (isset($data['word'])) {
+            $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
+        }
+        $query->latest();
+        if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
+            $per_page = $data['per_page'] ?? 10;
+            $all_hero_sections = $query->paginate($per_page);
+            $response = PropertyTypeResource::collection($all_hero_sections)->response()->getData(true);
+        } else {
+            $all_hero_sections = $query->get();
+            $response = PropertyTypeResource::collection($all_hero_sections)->response()->getData(true);
+        }
+        return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
+    }
+
+
+    public function fetchPropertyTypeDetails($data):DataStatus
     {
         $propertyType = PropertyType::find($data['property_type_id']);
         return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type fetched successfully');

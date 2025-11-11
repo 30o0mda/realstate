@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Location\CreateLocationRequest;
 use App\Http\Requests\Location\DeleteLocationRequest;
 use App\Http\Requests\Location\FetchAllLocationRequest;
+use App\Http\Requests\Location\FetchLocationDetailsRequest;
 use App\Http\Requests\Location\FetchLocationRequest;
 use App\Http\Requests\Location\UpdataLocationRequest;
 use App\Service\Location\LocationService;
@@ -36,6 +37,12 @@ class LocationController extends Controller
     {
         $data = $request->validated();
         return $this->LocationService->fetchLocation($data)->response();
+    }
+    
+    public function fetchLocationDetails(FetchLocationDetailsRequest $request)
+    {
+        $data = $request->validated();
+        return $this->LocationService->fetchLocationDetails($data)->response();
     }
 
     public function fetchAllLocations(FetchAllLocationRequest $request)

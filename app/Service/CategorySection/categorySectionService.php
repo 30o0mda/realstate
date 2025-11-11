@@ -16,24 +16,37 @@ class categorySectionService
 {
     public function __construct() {}
 
-    public function createOrUpdateCategorySection($data):DataStatus
-    {
-        $categorySectionData = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $categorySectionData[$locale] = [
-                'title' => $data['title_' . $locale] ?? null,
-                'description' => $data['description_' . $locale] ?? null,
-            ];
-        }
-        if ($categorySection = CategorySection::first()) {
-            $categorySection->update($categorySectionData);
-            return DataSuccess::make(resourceData: new CategorySectionResource($categorySection->fresh()), message: 'category section updated successfully');
-        }
-        $categorySection = CategorySection::create($categorySectionData);
-        return DataSuccess::make(resourceData: new CategorySectionResource($categorySection), message: 'category section created successfully');
-    }
+public function createOrUpdateCategorySection($data): DataStatus
+{
+    $categorySectionData = [];
 
-    public function fetchCategorySection():DataStatus
+    foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
+        $categorySectionData[$locale] = [
+            'title' => $data['title_' . $locale] ?? null,
+            'description' => $data['description_' . $locale] ?? null,
+        ];
+    }
+    $propertyTypeIds = $data['property_type_ids'] ?? [];
+    if ($categorySection = CategorySection::first()) {
+        $categorySection->update($categorySectionData);
+        $categorySection->propertyTypes()->sync($propertyTypeIds);
+        return DataSuccess::make(
+            resourceData: new CategorySectionResource($categorySection->fresh()),
+            message: 'category section updated successfully'
+        );
+    }
+    $categorySection = CategorySection::create($categorySectionData);
+    if (!empty($propertyTypeIds)) {
+        $categorySection->propertyTypes()->sync($propertyTypeIds);
+    }
+    return DataSuccess::make(
+        resourceData: new CategorySectionResource($categorySection),
+        message: 'category section created successfully'
+    );
+}
+
+
+    public function fetchCategorySection(): DataStatus
     {
         $categorySection = CategorySection::firstOrNew();
         return DataSuccess::make(resourceData: new CategorySectionResource($categorySection), message: 'category section fetched successfully');

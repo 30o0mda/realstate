@@ -21,7 +21,9 @@ class FetchHeroSectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'hero_section_id' => 'required|exists:hero_sections,id',
+            'word' => 'nullable|string',
+            'with_pagination' => 'nullable|boolean',
+            'per_page' => 'nullable|integer',
         ];
     }
 }

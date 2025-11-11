@@ -4,7 +4,7 @@ namespace App\Http\Requests\Location;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FetchLocationRequest extends FormRequest
+class FetchLocationDetailsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +21,7 @@ class FetchLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'word' => 'nullable|string',
-            'with_pagination' => 'nullable|boolean',
-            'per_page' => 'nullable|integer',
+            'location_id' => 'required|exists:locations,id',
         ];
     }
 }

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests\CategorySection;
+namespace App\Http\Requests\BlogHashtag;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Validation\Rule;
 
-class CreateOrUpdateCategorySectionRequest extends FormRequest
+
+class UpdataBlogHashtagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,20 +23,23 @@ class CreateOrUpdateCategorySectionRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $rules = [];
-
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
             $rules["title_$locale"] = [
-                'required',
+                'nullable',
                 'string',
                 'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale),
+                Rule::unique('blog_hashtag_translations', 'title')->where('locale', $locale)->ignore($this->blog_hashtag_id, 'blog_hashtag_id'),
             ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
         }
-        $rules['property_type_ids'] = 'nullable|array';
-        $rules['property_type_ids.*'] = 'integer|exists:property_types,id';
+        $rules['image'] = 'nullable';
+        $rules['blog_hashtag_id'] = 'required|exists:blog_hashtags,id';
+        $rules['slug'] = [
+            'nullable',
+            Rule::unique('blog_hashtags', 'slug')->ignore($this->blog_hashtag_id, 'id'),
+        ];
+        $rules['alt'] = 'nullable|string';
+        $rules['is_active'] = 'nullable|boolean';
         return $rules;
     }
 }

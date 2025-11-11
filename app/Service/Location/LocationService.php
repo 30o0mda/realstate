@@ -23,7 +23,7 @@ class LocationService
             ];
         }
         $parent_id = $data['parent_id'] ?? null;
-        $image = $data['image']->store('location', 'public');
+        $image = uploadImage($data['image'], 'location', 'public');
         $code = $data['code'] ?? null;
         $location = Location::create($create_data + [
             'image' => $image,
@@ -33,10 +33,10 @@ class LocationService
         // return ApiResponseHelper::response(true, 'location created successfully', [
         //     new LocationResource($location)
         // ]);
-        return DataSuccess::make(resourceData:new LocationResource($location), message:'location created successfully');
+        return DataSuccess::make(resourceData: new LocationResource($location), message: 'location created successfully');
     }
 
-    public function updataLocation($data):DataStatus
+    public function updataLocation($data): DataStatus
     {
         $updata_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -45,29 +45,48 @@ class LocationService
             ];
         }
         $is_active = $data['is_active'] ?? false;
-        $heroSection = Location::find($data['location_id']);
-        $image = $data['image'] ? $data['image']->store('property_type', 'public') : $heroSection->image;
-        $heroSection->update($updata_data + [
+        $location = Location::find($data['location_id']);
+        $image = isset($data['image']) ? uploadImage($data['image'], 'location', 'public') : $location->image;
+        $location->update($updata_data + [
             'image' => $image,
             'is_active' => $is_active
         ]);
         // return ApiResponseHelper::response(true, 'location updated successfully', [
-        //     new LocationResource($heroSection)
+        //     new LocationResource($location)
         // ]);
-        return DataSuccess::make(resourceData:new LocationResource($heroSection), message:'location updated successfully');
+        return DataSuccess::make(resourceData: new LocationResource($location), message: 'location updated successfully');
     }
 
-    public function fetchLocation($data):DataStatus
+    public function fetchLocation($data): DataStatus
     {
-        $heroSection = Location::find($data['location_id']);
-        // return ApiResponseHelper::response(true, 'location fetched successfully', [
-        //     new LocationResource($heroSection)
-        // ]);
-        return DataSuccess::make(resourceData:new LocationResource($heroSection), message:'location fetched successfully');
+        $query = Location::query();
+        if (isset($data['word'])) {
+            $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
+        }
+        $query->latest();
+        if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
+            $per_page = $data['per_page'] ?? 10;
+            $all_location = $query->paginate($per_page);
+            $response = LocationResource::collection($all_location)->response()->getData(true);
+        } else {
+            $all_location = $query->get();
+            $response = LocationResource::collection($all_location)->response()->getData(true);
+        }
+        return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
     }
 
 
-    public function fetchAllLocations($data):DataStatus
+    public function fetchLocationDetails($data): DataStatus
+    {
+        $location = Location::find($data['location_id']);
+        // return ApiResponseHelper::response(true, 'location fetched successfully', [
+        //     new LocationResource($location)
+        // ]);
+        return DataSuccess::make(resourceData: new LocationResource($location), message: 'location fetched successfully');
+    }
+
+
+    public function fetchAllLocations($data): DataStatus
     {
         $parentId = $data['parent_id'] ?? null;
 
@@ -84,14 +103,14 @@ class LocationService
         // return ApiResponseHelper::response(true, 'Locations fetched successfully', [
         //     'locations' => $data
         // ]);
-        return DataSuccess::make(resourceData:$data, message:'Locations fetched successfully');
+        return DataSuccess::make(resourceData: $data, message: 'Locations fetched successfully');
     }
 
-    public function deleteLocation($data):DataStatus
+    public function deleteLocation($data): DataStatus
     {
-        $heroSection = Location::find($data['location_id']);
-        $heroSection->delete();
+        $location = Location::find($data['location_id']);
+        $location->delete();
         // return ApiResponseHelper::response(true, 'location deleted successfully');
-        return DataSuccess::make(message:'location deleted successfully');
+        return DataSuccess::make(message: 'location deleted successfully');
     }
 }
