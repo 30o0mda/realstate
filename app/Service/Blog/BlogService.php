@@ -12,7 +12,7 @@ class BlogService
 {
     public function __construct() {}
 
-    public function createBlog($data): DataStatus
+    public function createBlog($data, $organization_id = null, $created_by = null): DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -30,6 +30,8 @@ class BlogService
             'alt' => $data['alt'] ?? null,
             'slug' => $data['slug'] ?? null,
             'is_active' => $data['is_active'] ?? true,
+            'organization_id' => $organization_id,
+            'created_by' => $created_by,
         ]);
         if (!empty($data['blog_category_ids'])) {
             $blog->blogCategories()->sync($data['blog_category_ids']);
@@ -76,6 +78,7 @@ class BlogService
             $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
         }
         $query->latest();
+        $query->where('organization_id', getOrganizationId());
         if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
             $per_page = $data['per_page'] ?? 10;
             $all_blog = $query->paginate($per_page);

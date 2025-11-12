@@ -22,7 +22,7 @@ class BlogHashtagController extends Controller
     public function createBlogHashtag(CreateBlogHashtagRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogHashtagService->createBlogHashtag($data)->response();
+        return $this->BlogHashtagService->createBlogHashtag($data, getOrganizationId(), auth('employee')->user()->id)->response();
     }
 
     public function updataBlogHashtag(UpdataBlogHashtagRequest $request)

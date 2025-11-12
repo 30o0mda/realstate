@@ -25,17 +25,21 @@ class CreateHeroSectionRequest extends FormRequest
 
         $rules = [];
 
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'required',
-                'string',
-                'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale),
-            ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
-        }
+        $rules['title_en']=[
+            'required',
+            'string',
+            'min:2',
+            'max:255',
+        ];
+        $rules['title_ar']=[
+            'nullable',
+            'string',
+            'min:2',
+            'max:255',
+        ];
+        $rules['description_en'] = 'nullable|string|min:2';
+        $rules['description_ar'] = 'nullable|string|min:2';
         $rules['image'] = 'required|image|mimes:jpeg,png,jpg,gif|';
-
         return $rules;
     }
 }

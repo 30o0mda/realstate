@@ -23,7 +23,7 @@ class HeroSectionController extends Controller
     public function createHeroSection(CreateHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->createHeroSection($data)->response();
+        return $this->HeroSectionService->createHeroSection(data: $data, organization_id: getOrganizationId(), created_by: auth('employee')->user()->id)->response();
     }
 
     public function updataHeroSection(UpdataHeroSectionRequest $request)

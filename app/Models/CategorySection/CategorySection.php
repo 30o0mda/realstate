@@ -16,6 +16,12 @@ class CategorySection extends Model implements TranslatableContract
 
     public $translatedAttributes = ['title', 'description'];
 
+    protected $fillable = [
+        'image',
+        'organization_id',
+        'created_by',
+    ];
+
     public function propertyTypes()
     {
         return $this->belongsToMany(PropertyType::class, 'category_section_property_types', 'category_section_id', 'property_type_id');

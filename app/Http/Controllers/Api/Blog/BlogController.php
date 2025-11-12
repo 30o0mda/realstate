@@ -9,6 +9,7 @@ use App\Http\Requests\Blog\DeleteBlogRequest;
 use App\Http\Requests\Blog\FetchBlogDetailsRequest;
 use App\Http\Requests\Blog\FetchBlogRequest;
 use App\Http\Requests\Blog\UpdataBlogRequest;
+use App\Models\Organization\Organization;
 use App\Service\Blog\BlogService;
 
 class BlogController extends Controller
@@ -23,7 +24,7 @@ class BlogController extends Controller
     public function createBlog(CreateBlogRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogService->createBlog($data)->response();
+        return $this->BlogService->createBlog($data, getOrganizationId(), auth('employee')->user()->id)->response();
     }
 
     public function updataBlog(UpdataBlogRequest $request)

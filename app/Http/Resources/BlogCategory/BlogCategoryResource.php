@@ -18,6 +18,8 @@ class BlogCategoryResource extends JsonResource
             'alt' => $this->alt,
             'slug' => $this->slug,
             'is_active' => $this->is_active,
+            'organization_id' => $this->organization_id,
+            'created_by' => $this->created_by,
         ];
     }
 }

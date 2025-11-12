@@ -24,15 +24,18 @@ class UpdataHeroSectionRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale)->ignore($this->hero_section_id, 'hero_section_id'),
-            ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
-        }
+        $rules["title_en"] = [
+            'required',
+            'string',
+            'min:2',
+        ];
+        $rules["title_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["description_en"] = 'nullable|string|min:2';
+        $rules["description_ar"] = 'nullable|string|min:2';
         $rules['image'] = 'nullable|image|mimes:jpeg,png,jpg,gif|';
         $rules['hero_section_id'] = 'required|exists:hero_sections,id';
         return $rules;

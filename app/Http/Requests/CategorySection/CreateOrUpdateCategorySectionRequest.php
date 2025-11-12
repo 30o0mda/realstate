@@ -25,17 +25,21 @@ class CreateOrUpdateCategorySectionRequest extends FormRequest
 
         $rules = [];
 
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'required',
-                'string',
-                'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale),
-            ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
-        }
+        $rules["title_en"] = [
+            'required',
+            'string',
+            'min:2',
+        ];
+        $rules["title_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["description_en"] = 'nullable|string|min:2';
+        $rules["description_ar"] = 'nullable|string|min:2';
         $rules['property_type_ids'] = 'nullable|array';
         $rules['property_type_ids.*'] = 'integer|exists:property_types,id';
+        $rules['image'] = 'nullable';
         return $rules;
     }
 }

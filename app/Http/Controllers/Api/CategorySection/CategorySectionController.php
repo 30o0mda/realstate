@@ -18,6 +18,8 @@ class CategorySectionController extends Controller
     public function createOrUpdateCategorySection(CreateOrUpdateCategorySectionRequest $request)
     {
         $data = $request->validated();
+        $data['organization_id'] = getOrganizationId();
+        $data['created_by'] = auth('employee')->user()->id;
         return $this->categorySectionService->createOrUpdateCategorySection($data)->response();
     }
 

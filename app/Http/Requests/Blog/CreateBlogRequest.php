@@ -25,45 +25,62 @@ class CreateBlogRequest extends FormRequest
 
         $rules = [];
 
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
+            $rules["title_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_translations', 'title')->where('locale', $locale),
             ];
-            $rules["description_$locale"] = [
+            $rules['title_ar'] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
+            $rules["description_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_translations', 'description')->where('locale', $locale),
             ];
-            $rules["subtitle_$locale"] = [
+            $rules['description_ar'] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
+            $rules["subtitle_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_translations', 'subtitle')->where('locale', $locale),
             ];
-            $rules["meta_title_$locale"] = [
+            $rules["subtitle_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
+            $rules["meta_title_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_translations', 'meta_title')->where('locale', $locale),
             ];
-            $rules["meta_description_$locale"] = [
+            $rules["meta_title_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
+            $rules["meta_description_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_translations', 'meta_description')->where('locale', $locale),
             ];
-        }
+            $rules["meta_description_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
         $rules['image'] = 'nullable';
         $rules['slug'] = 'required|unique:blogs,slug';
         $rules['alt'] = 'nullable|string';
         $rules['is_active'] = 'nullable|boolean';
         $rules['blog_category_ids'] = 'required|array';
         $rules['blog_category_ids.*'] = 'required|exists:blog_categories,id';
-        
         $rules['blog_hashtag_ids'] = 'required|array';
         $rules['blog_hashtag_ids.*'] = 'required|exists:blog_hashtags,id';
 

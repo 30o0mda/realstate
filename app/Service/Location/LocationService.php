@@ -14,7 +14,7 @@ class LocationService
 {
     public function __construct() {}
 
-    public function createLocation($data)
+    public function createLocation($data,$organization_id=null, $created_by=null): DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -28,7 +28,9 @@ class LocationService
         $location = Location::create($create_data + [
             'image' => $image,
             'parent_id' => $parent_id,
-            'code' => $code
+            'code' => $code,
+            'organization_id' => $organization_id,
+            'created_by' => $created_by,
         ]);
         // return ApiResponseHelper::response(true, 'location created successfully', [
         //     new LocationResource($location)
@@ -44,8 +46,8 @@ class LocationService
                 'title' => $data['title_' . $locale] ?? null,
             ];
         }
-        $is_active = $data['is_active'] ?? false;
         $location = Location::find($data['location_id']);
+        $is_active = $data['is_active'] ?? $location->is_active;
         $image = isset($data['image']) ? uploadImage($data['image'], 'location', 'public') : $location->image;
         $location->update($updata_data + [
             'image' => $image,
@@ -60,6 +62,7 @@ class LocationService
     public function fetchLocation($data): DataStatus
     {
         $query = Location::query();
+        $query->where('organization_id', getOrganizationId());
         if (isset($data['word'])) {
             $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
         }

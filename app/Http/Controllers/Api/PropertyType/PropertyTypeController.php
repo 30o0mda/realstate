@@ -23,7 +23,7 @@ class PropertyTypeController extends Controller
     public function createPropertyType(CreatePropertyTypeRequest $request)
     {
         $data = $request->validated();
-        return $this->PropertyTypeService->createPropertyType($data)->response();
+        return $this->PropertyTypeService->createPropertyType($data, getOrganizationId(), auth('employee')->user()->id)->response();
     }
 
     public function updataPropertyType(UpdataPropertyTypeRequest $request)

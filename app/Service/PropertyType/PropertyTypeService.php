@@ -14,7 +14,7 @@ class PropertyTypeService
 {
     public function __construct() {}
 
-    public function createPropertyType($data):DataStatus
+    public function createPropertyType($data, $organization_id, $created_by): DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -22,17 +22,16 @@ class PropertyTypeService
                 'title' => $data['title_' . $locale] ?? null,
             ];
         }
-        $is_active = $data['is_active'] ?? false;
         // dd($create_data);
         $image = uploadImage($data['image'], 'property_type', 'public');
         $propertyType = PropertyType::create($create_data + [
             'image' => $image,
-            'is_active' => $is_active
+            'organization_id' => $organization_id,
+            'created_by' => $created_by,
         ]);
-        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type created successfully');
+        return DataSuccess::make(resourceData: new PropertyTypeResource($propertyType), message: 'property type created successfully');
     }
-
-    public function updataPropertyType($data):DataStatus
+    public function updataPropertyType($data): DataStatus
     {
         $updata_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -40,19 +39,20 @@ class PropertyTypeService
                 'title' => $data['title_' . $locale] ?? null,
             ];
         }
-        $is_active = $data['is_active'] ?? false;
         $propertyType = PropertyType::find($data['property_type_id']);
+        $is_active = $data['is_active'] ?? $propertyType->is_active;
         $image = isset($data['image']) ? uploadImage($data['image'], 'property_type', 'public') : $propertyType->image;
         $propertyType->update($updata_data + [
             'image' => $image,
             'is_active' => $is_active
         ]);
-        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type updated successfully');
+        return DataSuccess::make(resourceData: new PropertyTypeResource($propertyType), message: 'property type updated successfully');
     }
 
-            public function fetchPropertyType($data): DataStatus
+    public function fetchPropertyType($data): DataStatus
     {
         $query = PropertyType::query();
+        $query->where('organization_id', getOrganizationId());
         if (isset($data['word'])) {
             $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
         }
@@ -69,16 +69,16 @@ class PropertyTypeService
     }
 
 
-    public function fetchPropertyTypeDetails($data):DataStatus
+    public function fetchPropertyTypeDetails($data): DataStatus
     {
         $propertyType = PropertyType::find($data['property_type_id']);
-        return DataSuccess::make(resourceData:new PropertyTypeResource($propertyType), message:'property type fetched successfully');
+        return DataSuccess::make(resourceData: new PropertyTypeResource($propertyType), message: 'property type fetched successfully');
     }
 
-    public function deletePropertyType($data):DataStatus
+    public function deletePropertyType($data): DataStatus
     {
         $propertyType = PropertyType::find($data['property_type_id']);
         $propertyType->delete();
-        return DataSuccess::make(message:'property type deleted successfully');
+        return DataSuccess::make(message: 'property type deleted successfully');
     }
 }

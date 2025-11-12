@@ -24,33 +24,58 @@ class UpdataBlogRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        $rules ['blog_id'] = 'required|exists:blogs,id';
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('blog_translations', 'title')->where('locale', $locale)->ignore($this->blog_id, 'blog_id'),
-            ];
-            $rules["description_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('blog_translations', 'description')->where('locale', $locale)->ignore($this->blog_id, 'blog_id'),
-            ];
-            $rules["meta_title_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('blog_translations', 'meta_title')->where('locale', $locale)->ignore($this->blog_id, 'blog_id'),
-            ];
-            $rules["meta_description_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('blog_translations', 'meta_description')->where('locale', $locale)->ignore($this->blog_id, 'blog_id'),
-            ];
-        }
+        $rules['blog_id'] = 'required|exists:blogs,id';
+
+        $rules["title_en"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules['title_ar'] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["description_en"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules['description_ar'] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["subtitle_en"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["subtitle_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["meta_title_en"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["meta_title_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["meta_description_en"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["meta_description_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
         $rules['image'] = 'nullable';
         $rules['slug'] = [
             'nullable',

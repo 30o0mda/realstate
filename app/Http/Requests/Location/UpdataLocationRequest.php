@@ -24,15 +24,18 @@ class UpdataLocationRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'nullable',
-                'string',
-                'min:2',
-                Rule::unique('hero_section_translations', 'title')->where('locale', $locale)->ignore($this->location_id, 'location_id'),
-            ];
-            $rules["description_$locale"] = 'nullable|string|min:2';
-        }
+        $rules["title_en"] = [
+            'required',
+            'string',
+            'min:2',
+        ];
+        $rules["title_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
+        $rules["description_en"] = 'nullable|string|min:2';
+        $rules["description_ar"] = 'nullable|string|min:2';
         $rules['image'] = 'nullable|image|mimes:jpeg,png,jpg,gif|';
         $rules['location_id'] = 'required|exists:locations,id';
         $rules['code'] = 'required|string|min:2';

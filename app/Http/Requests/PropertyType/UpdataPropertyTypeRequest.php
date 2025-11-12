@@ -24,14 +24,16 @@ class UpdataPropertyTypeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
+            $rules["title_en"] = [
+                'required',
+                'string',
+                'min:2',
+            ];
+            $rules["title_ar"] = [
                 'nullable',
                 'string',
                 'min:2',
-                Rule::unique('property_type_translations', 'title')->where('locale', $locale)->ignore($this->property_type_id, 'property_type_id'),
             ];
-        }
         $rules['is_active'] = 'nullable|boolean';
         $rules['image'] = 'nullable|image|mimes:jpeg,png,jpg,gif|';
         $rules['property_type_id'] = 'required|exists:property_types,id';

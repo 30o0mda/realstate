@@ -17,6 +17,8 @@ class HeroSectionResource extends JsonResource
             'title' => $title,
             'description' => $description,
             'image' => $this->image ? url('storage/' . $this->image) : null,
+            'organization_id' => $this->organization_id,
+            'created_by' => $this->created_by,
         ];
     }
 }

@@ -24,14 +24,16 @@ class UpdataBlogCategoryRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
+            $rules["title_en"] = [
                 'nullable',
                 'string',
                 'min:2',
-                Rule::unique('blog_category_translations', 'title')->where('locale', $locale)->ignore($this->blog_category_id, 'blog_category_id'),
             ];
-        }
+            $rules["title_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
         $rules['image'] = 'nullable';
         $rules['blog_category_id'] = 'required|exists:blog_categories,id';
         $rules['slug'] = [

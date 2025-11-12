@@ -27,7 +27,7 @@ class BlogCategoryController extends Controller
     public function createBlogCategory(CreateBlogCategoryRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogCategoryService->createBlogCategory($data)->response();
+        return $this->BlogCategoryService->createBlogCategory(data: $data, organization_id: getOrganizationId(), created_by: auth('employee')->user()->id)->response();
     }
 
     public function updataBlogCategory(UpdataBlogCategoryRequest $request)

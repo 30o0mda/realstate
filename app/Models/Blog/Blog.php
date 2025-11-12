@@ -22,7 +22,9 @@ class Blog extends Model implements TranslatableContract
         'slug',
         'image',
         'alt',
-        'is_active'
+        'is_active',
+        'organization_id',
+        'created_by',
     ];
     public function blogCategories()
     {

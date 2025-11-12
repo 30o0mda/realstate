@@ -17,6 +17,7 @@ class CategorySectionResource extends JsonResource
             'title' => $title ?? null,
             'description' => $description ?? null,
             'property_types' => $this->propertyTypes ? PropertyTypeResource::collection($this->propertyTypes) : []?? null,
+
         ];
     }
 }

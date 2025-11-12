@@ -24,14 +24,16 @@ class UpdataBlogHashtagRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
+            $rules["title_en"] = [
                 'nullable',
                 'string',
                 'min:2',
-                Rule::unique('blog_hashtag_translations', 'title')->where('locale', $locale)->ignore($this->blog_hashtag_id, 'blog_hashtag_id'),
             ];
-        }
+            $rules["title_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
         $rules['image'] = 'nullable';
         $rules['blog_hashtag_id'] = 'required|exists:blog_hashtags,id';
         $rules['slug'] = [

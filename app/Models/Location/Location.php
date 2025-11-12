@@ -17,7 +17,9 @@ class Location extends Model implements TranslatableContract
         'image',
         'parent_id',
         'code',
-        'is_active'
+        'is_active',
+        'organization_id',
+        'created_by',
     ];
 
     public function parent()

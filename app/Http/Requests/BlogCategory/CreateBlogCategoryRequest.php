@@ -25,14 +25,17 @@ class CreateBlogCategoryRequest extends FormRequest
 
         $rules = [];
 
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
+            $rules["title_en"] = [
                 'required',
                 'string',
                 'min:2',
-                Rule::unique('blog_category_translations', 'title')->where('locale', $locale),
             ];
-        }
+            $rules["title_ar"] = [
+                'nullable',
+                'string',
+                'min:2',
+            ];
+
         $rules['image'] = 'nullable';
         $rules['slug'] = 'required|unique:blog_categories,slug';
         $rules['alt'] = 'nullable|string';

@@ -24,7 +24,7 @@ class LocationController extends Controller
     public function createLocation(CreateLocationRequest $request)
     {
         $data = $request->validated();
-        return $this->LocationService->createLocation($data)->response();
+        return $this->LocationService->createLocation($data, getOrganizationId(), auth('employee')->user()->id)->response();
     }
 
     public function updataLocation(UpdataLocationRequest $request)
@@ -38,7 +38,7 @@ class LocationController extends Controller
         $data = $request->validated();
         return $this->LocationService->fetchLocation($data)->response();
     }
-    
+
     public function fetchLocationDetails(FetchLocationDetailsRequest $request)
     {
         $data = $request->validated();

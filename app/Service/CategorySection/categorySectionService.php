@@ -27,6 +27,10 @@ public function createOrUpdateCategorySection($data): DataStatus
         ];
     }
     $propertyTypeIds = $data['property_type_ids'] ?? [];
+    $categorySectionData += [
+        'organization_id' => $data['organization_id'],
+        'created_by' => $data['created_by'],
+    ];
     if ($categorySection = CategorySection::first()) {
         $categorySection->update($categorySectionData);
         $categorySection->propertyTypes()->sync($propertyTypeIds);

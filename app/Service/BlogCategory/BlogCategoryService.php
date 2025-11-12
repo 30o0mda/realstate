@@ -17,7 +17,7 @@ class BlogCategoryService
     {
     }
 
-        public function createBlogCategory( $data):DataStatus
+        public function createBlogCategory( $data , $organization_id=null, $created_by=null):DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -31,6 +31,8 @@ class BlogCategoryService
             'alt' => $data['alt'] ?? null,
             'slug' => $data['slug']?? null,
             'is_active' => $data['is_active'] ?? true,
+            'organization_id' => $organization_id,
+            'created_by' => $created_by,
         ]);
         return DataSuccess::make(resourceData:new BlogCategoryResource($blogCategory), message:'Blog category created successfully');
     }

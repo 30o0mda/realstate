@@ -15,7 +15,9 @@ class PropertyTypeResource extends JsonResource
             'id' => $this->id,
             'title' => $title,
             'image' => $this->image ? url('storage/' . $this->image) : null,
-            'is_active' => boolval($this->is_active)
+            'is_active' => boolval($this->is_active),
+            'organization_id' => $this->organization_id,
+            'created_by' => $this->created_by,
         ];
     }
 }

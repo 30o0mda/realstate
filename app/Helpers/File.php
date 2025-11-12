@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Organization\Organization;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -20,6 +21,8 @@ function uploadImage($file, $folder, $disk = 'public')
 
     return $path;
 }
+
+
 
 function updateImage($file, string $folder, Model $model, string $fileName, $disk = 'public')
 {
@@ -342,3 +345,11 @@ function hasFile($row, string $file): ?string
 {
     return isset($row[$file]) ? $row[$file] : null;
 }
+
+
+function getOrganizationId($request=null): ?int
+{
+    $user = auth('employee')->user();
+    return $user ? $user->organization_id : Organization::first()->id;
+}
+

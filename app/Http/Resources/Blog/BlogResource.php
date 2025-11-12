@@ -29,6 +29,8 @@ class BlogResource extends JsonResource
             'alt' => $this->alt,
             'slug' => $this->slug,
             'is_active' => $this->is_active,
+            'organization_id' => $this->organization_id,
+            'created_by' => $this->created_by,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'blog_categories' => BlogCategoryResource::collection($this->blogCategories??[]) ?? null,

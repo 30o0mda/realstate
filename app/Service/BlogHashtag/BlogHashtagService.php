@@ -17,7 +17,7 @@ class BlogHashtagService
     {
     }
 
-        public function createBlogHashtag( $data):DataStatus
+        public function createBlogHashtag( $data,$organization_id=null,$created_by=null):DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -31,6 +31,8 @@ class BlogHashtagService
             'alt' => $data['alt'] ?? null,
             'slug' => $data['slug']?? null,
             'is_active' => $data['is_active'] ?? true,
+            'organization_id' => $organization_id,
+            'created_by' => $created_by,
         ]);
         return DataSuccess::make(resourceData:new BlogHashtagResource($blogHashtag), message:'Blog hashtag created successfully');
     }
@@ -57,6 +59,7 @@ class BlogHashtagService
     public function fetchBlogHashtag($data):DataStatus
     {
         $query = BlogHashtag::query();
+        $query->where('organization_id', getOrganizationId());
         if (isset($data['word'])) {
             $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
         }

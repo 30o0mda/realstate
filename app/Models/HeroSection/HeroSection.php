@@ -15,6 +15,8 @@ class HeroSection extends Model implements TranslatableContract
     public $translatedAttributes = ['title', 'description'];
     protected $fillable = [
         'image',
+        'organization_id',
+        'created_by',
     ];
 
 

@@ -18,6 +18,8 @@ class PropertyType extends Model implements TranslatableContract
     protected $fillable = [
         'image',
         'is_active',
+        'organization_id',
+        'created_by',
     ];
 
     public function categorySections()

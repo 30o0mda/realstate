@@ -22,17 +22,17 @@ class CreateLocationRequest extends FormRequest
      */
     public function rules(): array
     {
-
         $rules = [];
-
-        foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
-            $rules["title_$locale"] = [
-                'required',
-                'string',
-                'min:2',
-                Rule::unique('location_translations', 'title')->where('locale', $locale),
-            ];
-        }
+        $rules["title_en"] = [
+            'required',
+            'string',
+            'min:2',
+        ];
+        $rules["title_ar"] = [
+            'nullable',
+            'string',
+            'min:2',
+        ];
         $rules['image'] = 'required|image|mimes:jpeg,png,jpg,gif|';
         $rules['parent_id'] = 'nullable|exists:locations,id';
         $rules['code'] = 'required|string|min:2';
