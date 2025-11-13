@@ -6,12 +6,17 @@ use App\Http\Controllers\Api\BlogHashtag\BlogHashtagController;
 use App\Http\Controllers\Api\HeroSection\HeroSectionController;
 use App\Http\Controllers\Api\CategorySection\CategorySectionController;
 use App\Http\Controllers\Api\Location\LocationController;
-use App\Http\Controllers\Api\Organization\OrganizationController;
 use App\Http\Controllers\Api\OrganizationEmployee\OrganizationEmployeeController;
 use App\Http\Controllers\Api\PropertyType\PropertyTypeController;
 use App\Http\Controllers\Api\SectionPropertyType\SectionPropertyTypeController;
-use App\Http\Controllers\Api\UserController;
-use App\Models\BlogCategory\BlogCategory;
+use App\Http\Controllers\Api\User\UserController;
+use App\Http\Controllers\Api\UserDashboard\UserDashboardController;
+use App\Http\Controllers\UserWebSite\Blog\BlogWebsiteController;
+use App\Http\Controllers\UserWebSite\BlogCategory\BlogCategoryWebsiteController;
+use App\Http\Controllers\UserWebSite\BlogHashtag\BlogHashtagWebsiteController;
+use App\Http\Controllers\UserWebSite\CategorySection\CategorySectionWebsiteController;
+use App\Http\Controllers\UserWebSite\HeroSection\HeroSectionWebsiteController;
+use App\Http\Controllers\UserWebSite\PropertyType\PropertyTypeWebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,10 +25,25 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('user')->group(function () {
-    Route::post('/register', [UserController::class, 'registerUser']);
-    Route::post('/login', [UserController::class, 'loginUser']);
+    Route::post('/register_user', [UserController::class, 'registerUser']);
+    Route::post('/login_user', [UserController::class, 'loginUser']);
     Route::middleware('auth:user')->group(function () {
-        
+        Route::get('/fetch_data', [UserDashboardController::class, 'fetchDashboard']);
+        Route::post('/fetch_blog', [BlogWebsiteController::class, 'fetchBlog']);
+        Route::get('/fetch_blog_details', [BlogWebsiteController::class, 'fetchBlogDetails']);
+        Route::post('/fetch_blog_category', [BlogCategoryWebsiteController::class, 'fetchBlogCategory']);
+        Route::get('/fetch_blog_category_details', [BlogCategoryWebsiteController::class, 'fetchBlogCategoryDetails']);
+        Route::post('/fetch_blog_hashtag', [BlogHashtagWebsiteController::class, 'fetchBlogHashtag']);
+        Route::get('/fetch_blog_hashtag_details', [BlogHashtagWebsiteController::class, 'fetchBlogHashtagDetails']);
+        Route::get('/fetch_category_section', [CategorySectionWebsiteController::class, 'fetchCategorySection']);
+        Route::post('/fetch_hero_section', [HeroSectionWebsiteController::class, 'fetchHeroSection']);
+        Route::get('/fetch_hero_section_details', [HeroSectionWebsiteController::class, 'fetchHeroSectionDetails']);
+        Route::post('/fetch_location', [LocationController::class, 'fetchLocation']);
+        Route::get('/fetch_location_details', [LocationController::class, 'fetchLocationDetails']);
+        Route::post('/fetch_all_location', [LocationController::class, 'fetchAllLocations']);
+        Route::post('/fetch_property_type', [PropertyTypeWebsiteController::class, 'fetchPropertyType']);
+        Route::get('/fetch_property_type_details', [PropertyTypeWebsiteController::class, 'fetchPropertyTypeDetails']);
+
     });
 });
 

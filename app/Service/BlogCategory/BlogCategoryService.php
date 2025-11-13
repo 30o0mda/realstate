@@ -5,8 +5,10 @@ namespace App\Service\BlogCategory;
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Resources\BlogCategory\BlogCategoryResource;
 use App\Http\Resources\HeroSection\HeroSectionResource;
+use App\Http\ResourcesWebsite\BlogCategory\BlogCategoryWebsiteResource;
 use App\Models\BlogCategory\BlogCategory;
 use App\Models\HeroSection\HeroSection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -56,7 +58,7 @@ class BlogCategoryService
         return DataSuccess::make(resourceData:new BlogCategoryResource($blogCategory), message:'Blog category updated successfully');
     }
 
-    public function fetchBlogCategory($data):DataStatus
+    public function fetchBlogCategory($data, $organization_id, $view_type=ViewTypeEnum::Dashboard->value):DataStatus
     {
         $query = BlogCategory::query();
         if (isset($data['word'])) {
@@ -66,18 +68,31 @@ class BlogCategoryService
         if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
             $per_page = $data['per_page'] ?? 10;
             $all_blog_category = $query->paginate($per_page);
-            $response = BlogCategoryResource::collection($all_blog_category)->response()->getData(true);
+            if ($view_type == ViewTypeEnum::Website->value) {
+                $response = BlogCategoryWebsiteResource::collection($all_blog_category)->response()->getData(true);
+            } else {
+                $response = BlogCategoryResource::collection($all_blog_category)->response()->getData(true);
+            }
         } else {
             $all_blog_category = $query->get();
-            $response = BlogCategoryResource::collection($all_blog_category);
+            if ($view_type == ViewTypeEnum::Website->value) {
+                $response = BlogCategoryWebsiteResource::collection($all_blog_category);
+            }else {
+                $response = BlogCategoryResource::collection($all_blog_category);
+            }
         }
         return DataSuccess::make(resourceData:$response, message:'Blog category fetched successfully');
     }
 
-    public function fetchBlogCategoryDetails($data):DataStatus
+    public function fetchBlogCategoryDetails($data, $organization_id, $view_type=ViewTypeEnum::Dashboard->value):DataStatus
     {
         $blogCategory = BlogCategory::find($data['blog_category_id']);
-        return DataSuccess::make(resourceData:new BlogCategoryResource($blogCategory), message:'Blog category details fetched successfully');
+        if ($view_type == ViewTypeEnum::Website->value) {
+            $response = new BlogCategoryWebsiteResource($blogCategory);
+        } else {
+            $response = new BlogCategoryResource($blogCategory);
+        }
+        return DataSuccess::make(resourceData:$response, message:'Blog category details fetched successfully');
     }
     public function deleteBlogCategory($data):DataStatus
     {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\BlogHashtag;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\BlogHashtag\CreateBlogHashtagRequest;
 use App\Http\Requests\BlogHashtag\DeleteBlogHashtagRequest;
 use App\Http\Requests\BlogHashtag\FetchBlogHashtagDetailsRequest;
@@ -34,13 +35,13 @@ class BlogHashtagController extends Controller
     public function fetchBlogHashtag(FetchBlogHashtagRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogHashtagService->fetchBlogHashtag($data)->response();
+        return $this->BlogHashtagService->fetchBlogHashtag($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchBlogHashtagDetails(FetchBlogHashtagDetailsRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogHashtagService->fetchBlogHashtagDetails($data)->response();
+        return $this->BlogHashtagService->fetchBlogHashtagDetails($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function deleteBlogHashtag(DeleteBlogHashtagRequest $request)

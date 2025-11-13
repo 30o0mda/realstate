@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\HeroSection;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\HeroSection\CreateHeroSectionRequest;
 use App\Http\Requests\HeroSection\DeleteHeroSectionRequest;
 use App\Http\Requests\HeroSection\FetchHeroSectionDetailsRequest;
@@ -35,13 +36,13 @@ class HeroSectionController extends Controller
     public function fetchHeroSections(FetchHeroSectionRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->fetchHeroSections($data)->response();
+        return $this->HeroSectionService->fetchHeroSections($data, getOrganizationId(),ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchHeroSectionDetails(FetchHeroSectionDetailsRequest $request)
     {
         $data = $request->validated();
-        return $this->HeroSectionService->fetchHeroSectionDetails($data)->response();
+        return $this->HeroSectionService->fetchHeroSectionDetails($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function deleteHeroSection(DeleteHeroSectionRequest $request)

@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api\CategorySection;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\CategorySection\CreateOrUpdateCategorySectionRequest;
 use App\Http\Requests\CategorySection\FetchCategorySectionRequest;
 use App\Service\CategorySection\categorySectionService;
+use Illuminate\View\View;
+
 class CategorySectionController extends Controller
 {
     protected $categorySectionService;
@@ -25,7 +28,7 @@ class CategorySectionController extends Controller
 
     public function fetchCategorySection( )
     {
-        return $this->categorySectionService->fetchCategorySection()->response();
+        return $this->categorySectionService->fetchCategorySection(ViewTypeEnum::Dashboard->value)->response();
     }
 
 

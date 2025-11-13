@@ -4,7 +4,9 @@ namespace App\Service\Blog;
 
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
+use App\Http\Enum\viewTypeEnum;
 use App\Http\Resources\Blog\BlogResource;
+use App\Http\ResourcesWebsite\Blog\BlogWebsiteResource;
 use App\Models\Blog\Blog;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -71,29 +73,44 @@ class BlogService
         return DataSuccess::make(resourceData: new BlogResource($blog), message: 'Blog updated successfully');
     }
 
-    public function fetchBlog($data): DataStatus
-    {
-        $query = Blog::query();
-        if (isset($data['word'])) {
-            $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
-        }
-        $query->latest();
-        $query->where('organization_id', getOrganizationId());
-        if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
-            $per_page = $data['per_page'] ?? 10;
-            $all_blog = $query->paginate($per_page);
-            $response = BlogResource::collection($all_blog)->response()->getData(true);
+public function fetchBlog($data, $viewType = ViewTypeEnum::Dashboard->value): DataStatus
+{
+    $query = Blog::query();
+    if (isset($data['word'])) {
+        $query->whereTranslationLike('title', '%' . $data['word'] . '%');
+    }
+    $query->latest();
+    $query->where('organization_id', getOrganizationId());
+    if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
+        $per_page = $data['per_page'] ?? 10;
+        $all_blog = $query->paginate($per_page);
+        if ($viewType == viewTypeEnum::Website->value) {
+            $response = BlogWebsiteResource::collection($all_blog)->response()->getData(true);
         } else {
-            $all_blog = $query->get();
+            $response = BlogResource::collection($all_blog)->response()->getData(true);
+        }
+    } else {
+        $all_blog = $query->get();
+        if ($viewType == ViewTypeEnum::Website->value) {
+            $response = BlogWebsiteResource::collection($all_blog);
+        } else {
             $response = BlogResource::collection($all_blog);
         }
-        return DataSuccess::make(resourceData: $response, message: 'Blog fetched successfully');
     }
 
-    public function fetchBlogDetails($data): DataStatus
+    return DataSuccess::make(resourceData: $response, message: 'Blog fetched successfully');
+}
+
+
+    public function fetchBlogDetails($data,  $viewType=ViewTypeEnum::Dashboard->value): DataStatus
     {
         $blog = Blog::find($data['blog_id']);
-        return DataSuccess::make(resourceData: new BlogResource($blog), message: 'Blog  details fetched successfully');
+        if ($viewType == ViewTypeEnum::Website->value) {
+            $response = new BlogWebsiteResource($blog);
+        } else {
+            $response = new BlogResource($blog);
+        }
+        return DataSuccess::make(resourceData: $response, message: 'Blog details fetched successfully');
     }
     public function deleteBlog($data): DataStatus
     {

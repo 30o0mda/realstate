@@ -5,8 +5,10 @@ namespace App\Service\Location;
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\Location\FetchAllLocationRequest;
 use App\Http\Resources\Location\LocationResource;
+use App\Http\ResourcesWebsite\Location\LocationWebsiteResource;
 use App\Models\Location\Location;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -59,7 +61,7 @@ class LocationService
         return DataSuccess::make(resourceData: new LocationResource($location), message: 'location updated successfully');
     }
 
-    public function fetchLocation($data): DataStatus
+    public function fetchLocation($data, $viewType = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $query = Location::query();
         $query->where('organization_id', getOrganizationId());
@@ -67,29 +69,41 @@ class LocationService
             $query->whereTranslationLike('title',  '%' . $data['word'] . '%');
         }
         $query->latest();
+        $query->where('organization_id', getOrganizationId());
         if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
             $per_page = $data['per_page'] ?? 10;
             $all_location = $query->paginate($per_page);
-            $response = LocationResource::collection($all_location)->response()->getData(true);
+            if ($viewType == ViewTypeEnum::Website->value) {
+                $response = LocationWebsiteResource::collection($all_location)->response()->getData(true);
+            } else {
+                $response = LocationResource::collection($all_location)->response()->getData(true);
+            }
         } else {
             $all_location = $query->get();
-            $response = LocationResource::collection($all_location)->response()->getData(true);
+            if ($viewType == ViewTypeEnum::Website->value) {
+                $response = LocationWebsiteResource::collection($all_location);
+            } else {
+                $response = LocationResource::collection($all_location);
+            }
         }
-        return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
+
+        return DataSuccess::make(data:$all_location, resourceData: $response, message: 'Hero sections fetched successfully');
     }
 
 
-    public function fetchLocationDetails($data): DataStatus
+    public function fetchLocationDetails($data, $viewType = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $location = Location::find($data['location_id']);
-        // return ApiResponseHelper::response(true, 'location fetched successfully', [
-        //     new LocationResource($location)
-        // ]);
-        return DataSuccess::make(resourceData: new LocationResource($location), message: 'location fetched successfully');
+        if ($viewType == ViewTypeEnum::Website->value) {
+            $resourceData = new LocationWebsiteResource($location);
+        } else {
+            $resourceData = new LocationResource($location);
+        }
+        return DataSuccess::make(resourceData: $resourceData, message: 'Location details fetched successfully');
     }
 
 
-    public function fetchAllLocations($data): DataStatus
+    public function fetchAllLocations($data, $viewType = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $parentId = $data['parent_id'] ?? null;
 
@@ -103,9 +117,11 @@ class LocationService
             }
         )->get();
         $data = LocationResource::collection($locations);
-        // return ApiResponseHelper::response(true, 'Locations fetched successfully', [
-        //     'locations' => $data
-        // ]);
+        if ($viewType == ViewTypeEnum::Website->value) {
+            $data = LocationWebsiteResource::collection($locations);
+        }else {
+            $data = LocationResource::collection($locations);
+        }
         return DataSuccess::make(resourceData: $data, message: 'Locations fetched successfully');
     }
 

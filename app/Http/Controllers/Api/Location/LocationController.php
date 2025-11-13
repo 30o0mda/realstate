@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Location;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\Location\CreateLocationRequest;
 use App\Http\Requests\Location\DeleteLocationRequest;
 use App\Http\Requests\Location\FetchAllLocationRequest;
@@ -36,19 +37,19 @@ class LocationController extends Controller
     public function fetchLocation(FetchLocationRequest $request)
     {
         $data = $request->validated();
-        return $this->LocationService->fetchLocation($data)->response();
+        return $this->LocationService->fetchLocation($data, getOrganizationId(),ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchLocationDetails(FetchLocationDetailsRequest $request)
     {
         $data = $request->validated();
-        return $this->LocationService->fetchLocationDetails($data)->response();
+        return $this->LocationService->fetchLocationDetails($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchAllLocations(FetchAllLocationRequest $request)
     {
         $data = $request->validated();
-        return $this->LocationService->fetchAllLocations($data)->response();
+        return $this->LocationService->fetchAllLocations($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function deleteLocation(DeleteLocationRequest $request)

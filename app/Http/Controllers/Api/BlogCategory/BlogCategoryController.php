@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\BlogCategory;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\BlogCategory\CreateBlogCategoryRequest;
 use App\Http\Requests\BlogCategory\DeleteBlogCategoryRequest;
 use App\Http\Requests\BlogCategory\FetchBlogCategoryDetailsRequest;
@@ -39,13 +40,13 @@ class BlogCategoryController extends Controller
     public function fetchBlogCategory(FetchBlogCategoryRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogCategoryService->fetchBlogCategory($data)->response();
+        return $this->BlogCategoryService->fetchBlogCategory($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchBlogCategoryDetails(FetchBlogCategoryDetailsRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogCategoryService->fetchBlogCategoryDetails($data)->response();
+        return $this->BlogCategoryService->fetchBlogCategoryDetails($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function deleteBlogCategory(DeleteBlogCategoryRequest $request)

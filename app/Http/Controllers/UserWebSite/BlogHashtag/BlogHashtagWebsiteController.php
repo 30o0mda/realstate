@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers\UserWebSite\BlogHashtag;
+
+use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
+use App\Http\Requests\BlogHashtag\CreateBlogHashtagRequest;
+use App\Http\Requests\BlogHashtag\DeleteBlogHashtagRequest;
+use App\Http\Requests\BlogHashtag\FetchBlogHashtagDetailsRequest;
+use App\Http\Requests\BlogHashtag\UpdataBlogHashtagRequest;
+use App\Http\Requests\BlogHashtag\FetchBlogHashtagRequest;
+use App\Service\BlogHashtag\BlogHashtagService;
+
+class BlogHashtagWebsiteController extends Controller
+{
+
+    protected $BlogHashtagService;
+
+    public function __construct(BlogHashtagService $BlogHashtagService)
+    {
+        $this->BlogHashtagService = $BlogHashtagService;
+    }
+
+
+    public function fetchBlogHashtag(FetchBlogHashtagRequest $request)
+    {
+        $data = $request->validated();
+        return $this->BlogHashtagService->fetchBlogHashtag($data, getOrganizationId(), ViewTypeEnum::Website->value)->response();
+    }
+
+    public function fetchBlogHashtagDetails(FetchBlogHashtagDetailsRequest $request)
+    {
+        $data = $request->validated();
+        return $this->BlogHashtagService->fetchBlogHashtagDetails($data, getOrganizationId(), ViewTypeEnum::Website->value)->response();
+    }
+
+
+}

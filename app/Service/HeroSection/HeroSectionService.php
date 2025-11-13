@@ -5,14 +5,16 @@ namespace App\Service\HeroSection;
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Resources\HeroSection\HeroSectionResource;
+use App\Http\ResourcesWebsite\HeroSection\HeroSectionWebsiteResource;
 use App\Models\HeroSection\HeroSection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HeroSectionService
 {
     public function __construct() {}
-    public function createHeroSection(array $data , $organization_id=null, $created_by=null): DataStatus
+    public function createHeroSection(array $data, $organization_id = null, $created_by = null): DataStatus
     {
         $create_data = [];
         foreach (LaravelLocalization::getSupportedLanguagesKeys() as $locale) {
@@ -48,7 +50,7 @@ class HeroSectionService
         ]);
         return DataSuccess::make(resourceData: new HeroSectionResource($heroSection), message: 'Hero section updated successfully');
     }
-    public function fetchHeroSections($data): DataStatus
+    public function fetchHeroSection($data,  $view_type = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $query = HeroSection::query();
         $query->where('organization_id', getOrganizationId());
@@ -59,19 +61,33 @@ class HeroSectionService
         if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
             $per_page = $data['per_page'] ?? 10;
             $all_hero_sections = $query->paginate($per_page);
-            $response = HeroSectionResource::collection($all_hero_sections)->response()->getData(true);
+            if ($view_type == ViewTypeEnum::Website->value) {
+                $response = HeroSectionWebsiteResource::collection($all_hero_sections)->response()->getData(true);
+            } else {
+                $response = HeroSectionResource::collection($all_hero_sections)->response()->getData(true);
+            }
         } else {
             $all_hero_sections = $query->get();
-            $response = HeroSectionResource::collection($all_hero_sections)->response()->getData(true);
+            if ($view_type == ViewTypeEnum::Website->value) {
+                $response = HeroSectionWebsiteResource::collection($all_hero_sections);
+            } else {
+                $response = HeroSectionResource::collection($all_hero_sections);
+            }
         }
         return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
     }
 
-    public function fetchHeroSectionDetails($data): DataStatus
+    public function fetchHeroSectionDetails($data, $organization_id = null, $view_type = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $heroSection = HeroSection::find($data['hero_section_id']);
-        return DataSuccess::make(resourceData: new HeroSectionResource($heroSection), message: 'Hero section fetched successfully');
+        if ($view_type == ViewTypeEnum::Website->value) {
+            $response = new HeroSectionWebsiteResource($heroSection);
+        } else {
+            $response = new HeroSectionResource($heroSection);
+        }
+        return DataSuccess::make(resourceData: $response, message: 'Hero section fetched successfully');
     }
+
     public function deleteHeroSection($data): DataStatus
     {
         $heroSection = HeroSection::find($data['hero_section_id']);

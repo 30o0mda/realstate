@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('image')->nullable();
+            $table->string('address')->nullable();
+            $table->unsignedTinyInteger(column: 'status')->nullable()->default(0)->comment('0 = pending, 1 = accepted, 2 = rejected');
+            $table->unsignedTinyInteger(column: 'type')->nullable()->default(1)->comment('1 = Client, 2 = broker');
+            $table->foreignId('organization_id')->nullable()->constrained('organizations')->onDelete('cascade');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -5,9 +5,11 @@ namespace App\Service\CategorySection;
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\Location\FetchAllLocationRequest;
 use App\Http\Resources\CategorySection\CategorySectionResource;
 use App\Http\Resources\Location\LocationResource;
+use App\Http\ResourcesWebsite\CategorySection\CategorySectionWebsiteResource;
 use App\Models\CategorySection\CategorySection;
 use App\Models\Location\Location;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -50,9 +52,14 @@ public function createOrUpdateCategorySection($data): DataStatus
 }
 
 
-    public function fetchCategorySection(): DataStatus
+    public function fetchCategorySection($view_type = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $categorySection = CategorySection::firstOrNew();
-        return DataSuccess::make(resourceData: new CategorySectionResource($categorySection), message: 'category section fetched successfully');
+        if ($view_type == ViewTypeEnum::Website->value) {
+            $response = new CategorySectionWebsiteResource($categorySection);
+        } else {
+            $response = new CategorySectionResource($categorySection);
+        }
+        return DataSuccess::make(resourceData: $response, message: 'category section fetched successfully');
     }
 }

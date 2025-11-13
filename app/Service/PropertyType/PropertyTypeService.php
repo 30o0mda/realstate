@@ -5,7 +5,9 @@ namespace App\Service\PropertyType;
 use App\Base\Response\DataStatus;
 use App\Base\Response\DataSuccess;
 use App\Helpers\ApiResponseHelper;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Resources\PropertyType\PropertyTypeResource;
+use App\Http\ResourcesWebsite\PropertyType\PropertyTypeWebsiteResource;
 use App\Models\PropertyType\PropertyType;
 use Dflydev\DotAccessData\Data;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -49,7 +51,7 @@ class PropertyTypeService
         return DataSuccess::make(resourceData: new PropertyTypeResource($propertyType), message: 'property type updated successfully');
     }
 
-    public function fetchPropertyType($data): DataStatus
+    public function fetchPropertyType($data, $view_type = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $query = PropertyType::query();
         $query->where('organization_id', getOrganizationId());
@@ -60,19 +62,32 @@ class PropertyTypeService
         if (isset($data['with_pagination']) && $data['with_pagination'] == 1) {
             $per_page = $data['per_page'] ?? 10;
             $all_hero_sections = $query->paginate($per_page);
-            $response = PropertyTypeResource::collection($all_hero_sections)->response()->getData(true);
+            if ($view_type == ViewTypeEnum::Dashboard->value) {
+                $response = PropertyTypeWebsiteResource::collection($all_hero_sections);
+            } else {
+                $response = PropertyTypeResource::collection($all_hero_sections);
+            }
         } else {
             $all_hero_sections = $query->get();
-            $response = PropertyTypeResource::collection($all_hero_sections)->response()->getData(true);
+            if ($view_type == ViewTypeEnum::Dashboard->value) {
+                $response = PropertyTypeWebsiteResource::collection($all_hero_sections);
+            } else {
+                $response = PropertyTypeResource::collection($all_hero_sections);
+            }
         }
         return DataSuccess::make(data: $response, message: 'Hero sections fetched successfully');
     }
 
 
-    public function fetchPropertyTypeDetails($data): DataStatus
+    public function fetchPropertyTypeDetails($data, $view_type = ViewTypeEnum::Dashboard->value): DataStatus
     {
         $propertyType = PropertyType::find($data['property_type_id']);
-        return DataSuccess::make(resourceData: new PropertyTypeResource($propertyType), message: 'property type fetched successfully');
+        if ($view_type == ViewTypeEnum::Dashboard->value) {
+            $response = new PropertyTypeWebsiteResource($propertyType);
+        } else {
+            $response = new PropertyTypeResource($propertyType);
+        }
+        return DataSuccess::make(resourceData: $response, message: 'property type fetched successfully');
     }
 
     public function deletePropertyType($data): DataStatus

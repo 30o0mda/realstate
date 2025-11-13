@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Blog;
 
 use App\Helpers\ApiResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Enum\ViewTypeEnum;
 use App\Http\Requests\Blog\CreateBlogRequest;
 use App\Http\Requests\Blog\DeleteBlogRequest;
 use App\Http\Requests\Blog\FetchBlogDetailsRequest;
@@ -36,13 +37,13 @@ class BlogController extends Controller
     public function fetchBlog(FetchBlogRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogService->fetchBlog($data)->response();
+        return $this->BlogService->fetchBlog($data, getOrganizationId(), ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function fetchBlogDetails(FetchBlogDetailsRequest $request)
     {
         $data = $request->validated();
-        return $this->BlogService->fetchBlogDetails($data)->response();
+        return $this->BlogService->fetchBlogDetails($data, ViewTypeEnum::Dashboard->value)->response();
     }
 
     public function deleteBlog(DeleteBlogRequest $request)
