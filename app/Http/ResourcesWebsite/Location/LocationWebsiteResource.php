@@ -2,6 +2,7 @@
 
 namespace App\Http\ResourcesWebsite\Location;
 
+use App\Http\Resources\Location\LocationResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class LocationWebsiteResource extends JsonResource

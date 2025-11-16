@@ -5,8 +5,11 @@ use App\Http\Controllers\Api\BlogCategory\BlogCategoryController;
 use App\Http\Controllers\Api\BlogHashtag\BlogHashtagController;
 use App\Http\Controllers\Api\HeroSection\HeroSectionController;
 use App\Http\Controllers\Api\CategorySection\CategorySectionController;
+use App\Http\Controllers\Api\ChooseUsFeature\ChooseUsFeatureController;
+use App\Http\Controllers\Api\ChooseUsHome\ChooseUsHomeController;
 use App\Http\Controllers\Api\Location\LocationController;
 use App\Http\Controllers\Api\OrganizationEmployee\OrganizationEmployeeController;
+use App\Http\Controllers\Api\PostHome\PostHomeController;
 use App\Http\Controllers\Api\PropertyType\PropertyTypeController;
 use App\Http\Controllers\Api\SectionPropertyType\SectionPropertyTypeController;
 use App\Http\Controllers\Api\User\UserController;
@@ -15,7 +18,9 @@ use App\Http\Controllers\UserWebSite\Blog\BlogWebsiteController;
 use App\Http\Controllers\UserWebSite\BlogCategory\BlogCategoryWebsiteController;
 use App\Http\Controllers\UserWebSite\BlogHashtag\BlogHashtagWebsiteController;
 use App\Http\Controllers\UserWebSite\CategorySection\CategorySectionWebsiteController;
+use App\Http\Controllers\UserWebSite\ChooseUsHome\ChooseUsHomeWebsiteController;
 use App\Http\Controllers\UserWebSite\HeroSection\HeroSectionWebsiteController;
+use App\Http\Controllers\UserWebSite\PostHome\PostHomeWebsiteController;
 use App\Http\Controllers\UserWebSite\PropertyType\PropertyTypeWebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,7 +48,8 @@ Route::prefix('user')->group(function () {
         Route::post('/fetch_all_location', [LocationController::class, 'fetchAllLocations']);
         Route::post('/fetch_property_type', [PropertyTypeWebsiteController::class, 'fetchPropertyType']);
         Route::get('/fetch_property_type_details', [PropertyTypeWebsiteController::class, 'fetchPropertyTypeDetails']);
-
+        Route::get('/fetch_post_home', [PostHomeWebsiteController::class, 'fetchPostHome']);
+        Route::get('/fetch_choose_us_home', [ChooseUsHomeWebsiteController::class, 'fetchChooseUsHome']);
     });
 });
 
@@ -100,6 +106,21 @@ Route::prefix('organization')->group(function () {
         Route::post('/fetch_blog_hashtag', [BlogHashtagController::class, 'fetchBlogHashtag']);
         Route::get('/fetch_blog_hashtag_details', [BlogHashtagController::class, 'fetchBlogHashtagDetails']);
         Route::post('/delete_blog_hashtag', [BlogHashtagController::class, 'deleteBlogHashtag']);
+
+        // Post Home
+        Route::post('/create_or_update_post_home', [PostHomeController::class, 'createOrUpdatePostHome']);
+        Route::get('/fetch_post_home', [PostHomeController::class, 'fetchPostHome']);
+
+        // Choose Us Home
+        Route::post('/create_or_update_choose_us_home', [ChooseUsHomeController::class, 'createOrUpdateChooseUsHome']);
+        Route::get('/fetch_choose_us_home', [ChooseUsHomeController::class, 'fetchChooseUsHome']);
+
+        // Choose Us Features
+        Route::post('/create_choose_us_features', [ChooseUsFeatureController::class, 'createChooseUsFeature']);
+        Route::post('/updata_choose_us_features', [ChooseUsFeatureController::class, 'updataChooseUsFeatures']);
+        Route::post('/fetch_choose_us_features', [ChooseUsFeatureController::class, 'fetchChooseUsFeatures']);
+        Route::get('/fetch_choose_us_features_details', [ChooseUsFeatureController::class, 'fetchChooseUsFeaturesDetails']);
+        Route::post('/delete_choose_us_features', [ChooseUsFeatureController::class, 'deleteChooseUsFeatures']);
     });
 });
 
