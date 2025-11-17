@@ -114,13 +114,6 @@ Route::prefix('organization')->group(function () {
         // Choose Us Home
         Route::post('/create_or_update_choose_us_home', [ChooseUsHomeController::class, 'createOrUpdateChooseUsHome']);
         Route::get('/fetch_choose_us_home', [ChooseUsHomeController::class, 'fetchChooseUsHome']);
-
-        // Choose Us Features
-        Route::post('/create_choose_us_features', [ChooseUsFeatureController::class, 'createChooseUsFeature']);
-        Route::post('/updata_choose_us_features', [ChooseUsFeatureController::class, 'updataChooseUsFeatures']);
-        Route::post('/fetch_choose_us_features', [ChooseUsFeatureController::class, 'fetchChooseUsFeatures']);
-        Route::get('/fetch_choose_us_features_details', [ChooseUsFeatureController::class, 'fetchChooseUsFeaturesDetails']);
-        Route::post('/delete_choose_us_features', [ChooseUsFeatureController::class, 'deleteChooseUsFeatures']);
     });
 });
 

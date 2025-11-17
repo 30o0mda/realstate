@@ -16,7 +16,6 @@ class UserController extends Controller
         $data = $request->validated();
         return $this->userService->registerUser($data, getOrganizationId())->response();
     }
-
     public function loginUser(UserLoginRequest $request)
     {
         $data = $request->validated();
