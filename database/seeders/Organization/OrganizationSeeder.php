@@ -4,6 +4,8 @@ namespace Database\Seeders\Organization;
 
 use App\Models\Organization\Organization;
 use App\Models\OrganizationEmployee\OrganizationEmployee;
+use App\Modules\Organization\Models\Organization\Organization as ModelsOrganization;
+use App\Modules\Organization\Models\organizationEmployee\OrganizationEmployee as ModelsOrganizationEmployee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -15,19 +17,19 @@ class OrganizationSeeder extends Seeder
      */
     public function run(): void
     {
-        Organization::create([
-            'name' => 'Organization',
-            'email' => 'organization@example.com',
+        ModelsOrganization::create([
+            'name' => 'Organization3',
+            'email' => 'organization3@example.com',
             'password' => Hash::make('123123123'),
-            'phone' => '123123123',
+            'phone' => '123123123123123',
             'image' => 'default.png',
             'type' => 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-        OrganizationEmployee::create([
-            'name' => 'Employee 1',
-            'email' => 'employee1@example.com',
+        ModelsOrganizationEmployee::create([
+            'name' => 'Employee 3',
+            'email' => 'employee3@example.com',
             'password' => Hash::make('123123123'),
             'phone' => '123123123',
             'image' => 'default.png',

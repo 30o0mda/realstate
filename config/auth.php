@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Organization\Organization;
-use App\Models\OrganizationEmployee\OrganizationEmployee;
+use App\Modules\Organization\Models\organizationEmployee\OrganizationEmployee;
 
 return [
 

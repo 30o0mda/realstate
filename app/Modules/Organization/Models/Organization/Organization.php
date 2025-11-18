@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Models\Organization;
+namespace App\Modules\Organization\Models\Organization;
 
-use App\Models\OrganizationEmployee\OrganizationEmployee;
+use App\Modules\Organization\Models\organizationEmployee\OrganizationEmployee;
+
+use Astrotomic\Translatable\Translatable;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 
 class Organization extends Authenticatable

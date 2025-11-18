@@ -1,7 +1,6 @@
 <?php
 
-namespace App\Models\HeroSection;
-
+namespace App\Modules\GeneralData\Models\HeroSection;
 use Illuminate\Database\Eloquent\Model;
 
 class HeroSectionTranslation extends Model

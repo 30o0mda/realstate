@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Models\OrganizationEmployee;
-
-use App\Models\Organization\Organization;
+namespace App\Modules\Organization\Models\organizationEmployee;
+use App\Modules\Organization\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -35,5 +34,4 @@ class OrganizationEmployee extends Authenticatable
     {
         return $this->belongsTo(Organization::class);
     }
-
 }

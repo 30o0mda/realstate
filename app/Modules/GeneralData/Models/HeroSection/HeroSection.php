@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Models\HeroSection;
+namespace App\Modules\GeneralData\Models\HeroSection;
 
+use App\Modules\Organization\Models\Organization\Organization;
+use App\Modules\Organization\Models\organizationEmployee\OrganizationEmployee;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -18,6 +20,11 @@ class HeroSection extends Model implements TranslatableContract
         'organization_id',
         'created_by',
     ];
+
+    public function createdBy()
+    {
+        return $this->belongsTo(OrganizationEmployee::class,'created_by');
+    }
 
 
 }
